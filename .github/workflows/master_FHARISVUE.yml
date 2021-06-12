@@ -52,5 +52,5 @@ jobs:
       with:
         app-name: 'FHARISVUE'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_620520871f9e4c879f9198a2c07afaa6 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_d722346ba36b41d3a50afe68329ff890 }}
         package: .
