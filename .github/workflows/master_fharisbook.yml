@@ -41,4 +41,4 @@ jobs:
         app-name: 'fharisbook'
         slot-name: 'production'
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_949f0ea7209e4d92971d52b39d74b2e4 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_be034fab33cb4176a214cf0327f8d6ef }}
