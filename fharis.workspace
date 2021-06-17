@@ -1,0 +1,39 @@
+{
+ "id": "{c117c3be-4fc3-4aba-820a-6be1e1921560}",
+ "name": "fharis",
+ "editable": true,
+ "version": 1,
+ "data": [
+  {
+   "nodeType": "stack",
+   "height": 100,
+   "width": 100,
+   "children": [
+    {
+     "title": "CPU performance",
+     "uri": "tools/CpuPerformance/CpuPerformance.htm"
+    },
+    {
+     "title": "Change sandbox",
+     "uri": "tools/XboxLiveSandbox/XboxLiveSandbox.htm"
+    },
+    {
+     "title": "Bluetooth",
+     "uri": "tools/Bluetooth/Bluetooth.htm"
+    },
+    {
+     "title": "Available networks",
+     "uri": "tools/AvailableNetworks/AvailableNetworks.htm"
+    },
+    {
+     "title": "Apps file explorer",
+     "uri": "tools/FileExplorer/FileExplorer.htm"
+    },
+    {
+     "title": "3D View",
+     "uri": "tools/3DView/3DView.htm"
+    }
+   ]
+  }
+ ]
+}
