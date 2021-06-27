@@ -1,26 +1,58 @@
-# This config uses the `.circleci/extended/orb-test.yml` as its base, and then publishes the app to S3.
-# The workflow contained here demonstrates a practical application of `post-steps`
-# and using workspace persistence
-version: 2.1
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # Specify the version you desire here
+      - image: circleci/php:7.1-node-browsers
 
-orbs:
-  node: circleci/node@4.1
-  # The S3 orb will setup the aws-cli and quickly copy or sync anything to s3.
-  # Orbs reduce the amount of configuration required for common tasks.
-  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/aws-s3
-  # NOTE: Environment variables containing the necessary secrets can be setup in the CircleCI UI
-  # See here https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project
-  aws-s3: circleci/aws-s3@2.0
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # Using the RAM variation mitigates I/O contention
+      # for database intensive operations.
+      # - image: circleci/mysql:5.7-ram
+      #
+      # - image: redis:2.8.19
 
-workflows:
-  sample:
-    jobs:
-      - node/test:
-          version: '15.1'
-          # after the node/test job completes, build the dist packages and save them to a workspace
-          post-steps:
-            - run: npm run build
-            - aws-s3/copy:
-                from: dist/
-                to: s3://sample-app-vue
-                arguments: --recursive
+    steps:
+      - checkout
+
+      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
+      - run: sudo docker-php-ext-install zip
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: composer install -n --prefer-dist
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "package.json" }}
+            - node-v1-
+      - run: yarn install
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+      # prepare the database
+      - run: touch storage/testing.sqlite
+      - run: php artisan migrate --env=testing --database=sqlite_testing --force
+
+      # run tests with phpunit or codecept
+      #- run: ./vendor/bin/phpunit
+      - run: ./vendor/bin/codecept build
+      - run: ./vendor/bin/codecept run
